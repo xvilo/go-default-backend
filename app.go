@@ -25,8 +25,22 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+func healthzHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	response := Response{
+		Message: "OK",
+		Host:    "healthy",
+	}
+
+	json.NewEncoder(w).Encode(response)
+}
+
 func main() {
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/healthz", healthzHandler)
+
 	port := "8080"
 	fmt.Printf("Starting server on port %s\n", port)
 	http.ListenAndServe(":"+port, nil)
